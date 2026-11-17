@@ -27,6 +27,10 @@ A mobile-first web application that helps students and campus staff report, sear
 * **Staff Password:** `admin123`
 
 ## Group Members
-* **[Your Name]** – Role
-* **[Member 2 Name]** – Role
-* **[Member 3 Name]** – Role
+* **Garsula, Frank
+Emmanuel** – Project Lead
+* **Amaro, Androjames** – Frontend
+* **Vince Mervin Inoferio** – Backend
+* **Rodriguez, Charish** – UX / Research
+* **Namoco, Ryn chill Ann** – QA / Story
+
