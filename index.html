@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Campus Lost &amp; Found</title>
+  <style>
+    :root { --bg:#f1f5f9; --navy:#0f172a; --slate:#334155; --muted:#64748b; --bd:#e2e8f0; --teal:#0d9488; --amb:#f59e0b; --red:#dc2626; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:system-ui,-apple-system,sans-serif; }
+    html, body { width:100%; max-width:100%; overflow-x:hidden; background:var(--bg); color:var(--navy); line-height:1.5; }
+    header { background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff; padding:.85rem 1rem; position:sticky; top:0; z-index:50; box-shadow:0 2px 10px rgba(15,23,42,.15); }
+    .wrap { width:100%; max-width:1100px; margin:0 auto; }
+    .top { display:flex; flex-direction:column; gap:.65rem; }
+    .bar, .row, .tabs { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:.6rem; min-width:0; }
+    .logo { width:36px; height:36px; border-radius:9px; background:var(--teal); display:grid; place-items:center; font-weight:800; flex-shrink:0; }
+    .brand h1 { font-size:clamp(1.1rem,2.5vw,1.3rem); line-height:1.2; } .brand p { font-size:.75rem; color:#94a3b8; }
+    nav { display:flex; flex-wrap:wrap; gap:.45rem; align-items:center; width:100%; }
+    .u-pill { font-size:.82rem; color:#e2e8f0; background:rgba(255,255,255,.08); padding:.35rem .65rem; border-radius:7px; display:inline-flex; align-items:center; gap:.35rem; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    nav button { flex:1 1 auto; }
+    button { background:var(--teal); color:#fff; border:none; min-height:40px; padding:.5rem .9rem; border-radius:8px; font-weight:600; cursor:pointer; font-size:.86rem; white-space:nowrap; }
+    button:hover { opacity:.9; } button:disabled { opacity:.55; cursor:not-allowed; }
+    button.sec { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); }
+    button.out { background:#fff; border:1px solid var(--bd); color:var(--slate); } button.dark { background:var(--navy); }
+    button.amb { background:var(--amb); color:var(--navy); font-weight:700; } button.del { background:#fee2e2; color:var(--red); }
+    button.sm { min-height:32px; padding:.25rem .65rem; font-size:.78rem; }
+    main { padding:1.25rem 1rem 2.5rem; }
+    .bar { margin-bottom:1.2rem; } .pills { display:flex; gap:.4rem; overflow-x:auto; max-width:100%; padding-bottom:2px; }
+    .pill { min-height:36px; padding:.35rem .85rem; border-radius:99px; background:#fff; color:var(--slate); border:1px solid var(--bd); font-size:.82rem; }
+    .pill.on { background:var(--navy); color:#fff; border-color:var(--navy); }
+    input, select, textarea { width:100%; min-height:42px; padding:.55rem .8rem; border:1px solid var(--bd); border-radius:8px; font-size:16px; background:#fff; color:var(--navy); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr)); gap:1rem; }
+    .card, .staff { background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.05); overflow:hidden; min-width:0; }
+    .card { display:flex; flex-direction:column; } .card img { width:100%; height:180px; object-fit:cover; background:#e2e8f0; display:block; }
+    .c-body { padding:1rem; display:flex; flex-direction:column; gap:.5rem; flex:1; min-width:0; }
+    .c-body h3, .c-body p { word-break:break-word; }
+    .tag { padding:.18rem .55rem; border-radius:5px; font-size:.7rem; font-weight:700; text-transform:uppercase; background:#f1f5f9; color:var(--slate); }
+    .tag.lost { background:#ffe4e6; color:#be123c; } .tag.found { background:#d1fae5; color:#047857; } .tag.st { background:#fef3c7; color:#b45309; }
+    .meta { margin-top:auto; padding-top:.55rem; border-top:1px solid #f1f5f9; font-size:.8rem; color:var(--muted); }
+    .staff-bar { display:flex; gap:.4rem; margin-top:.45rem; padding-top:.5rem; border-top:1px dashed var(--bd); }
+    .staff-bar select { min-height:36px; padding:.3rem .5rem; font-size:.82rem; flex:1; }
+    .staff-bar button { min-height:36px; padding:.3rem .7rem; font-size:.82rem; }
+    .staff { border:2px solid var(--teal); padding:1rem; margin-bottom:1.25rem; display:none; } .staff.show { display:block; }
+    .claim { border-top:1px solid var(--bd); padding:.75rem 0; display:flex; flex-wrap:wrap; justify-content:space-between; gap:.6rem; align-items:center; }
+    .bg { position:fixed; inset:0; background:rgba(15,23,42,.65); backdrop-filter:blur(3px); display:none; align-items:flex-end; justify-content:center; z-index:99; }
+    .bg.open { display:flex; }
+    .modal { background:#fff; width:100%; max-width:440px; border-radius:16px 16px 0 0; padding:1.25rem; max-height:90dvh; overflow-y:auto; }
+    .tabs { background:#f1f5f9; padding:.25rem; border-radius:9px; margin-bottom:.9rem; gap:.25rem; }
+    .tabs button { flex:1; min-height:36px; background:transparent; color:var(--slate); font-size:.82rem; padding:.4rem .5rem; } .tabs button.on { background:#fff; color:var(--navy); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+    .fld { margin-bottom:.7rem; } .fld label { display:block; font-size:.82rem; font-weight:600; margin-bottom:.2rem; color:var(--slate); }
+    .err { color:#be123c; background:#ffe4e6; padding:.55rem; border-radius:7px; font-size:.84rem; margin-bottom:.7rem; display:none; } .err:not(:empty) { display:block; }
+    @media(min-width:640px) {
+      .top { flex-direction:row; justify-content:space-between; align-items:center; }
+      nav { width:auto; justify-content:flex-end; flex-wrap:nowrap; } nav button { flex:0 0 auto; }
+      #q { max-width:320px; }
+      .bg { align-items:center; padding:1rem; } .modal { border-radius:14px; }
+    }
+  </style>
+</head>
+<body>
+<header><div class="wrap top">
+  <div class="brand"><div class="logo">LF</div><div><h1>Campus Lost &amp; Found</h1><p>Report, match &amp; recover lost belongings</p></div></div>
+  <nav id="nav"></nav>
+</div></header>
+
+<main class="wrap">
+  <section class="staff" id="staffBox">
+    <div class="row" style="margin-bottom:.35rem">
+      <div style="display:flex;align-items:center;gap:.5rem"><h3>Staff Verification Queue</h3><span class="tag found">Admin Active</span></div>
+      <button type="button" class="out sm" id="clrBtn" onclick="clearLogs()">Clear Logs</button>
+    </div>
+    <p style="font-size:.83rem;color:var(--muted);margin-bottom:.5rem">Verify the active student claim below, or manage item statuses directly on each card.</p>
+    <div id="claimsList">Loading...</div>
+  </section>
+
+  <div class="bar">
+    <div class="pills">
+      <button type="button" class="pill on" onclick="setF('active',this)">Active</button>
+      <button type="button" class="pill" onclick="setF('lost',this)">Lost</button>
+      <button type="button" class="pill" onclick="setF('found',this)">Found</button>
+      <button type="button" class="pill" onclick="setF('CLOSED',this)">Returned / Claimed</button>
+    </div>
+    <input id="q" oninput="render()" placeholder="Search item, room, or student..." />
+  </div>
+  <div class="grid" id="grid"><p style="color:var(--muted)">Loading items...</p></div>
+</main>
+
+<div class="bg" id="mAuth" onclick="if(event.target===this)closeAll()"><div class="modal">
+  <div class="tabs">
+    <button type="button" id="tIn" class="on" onclick="tab('in')">Log In</button>
+    <button type="button" id="tUp" onclick="tab('up')">Sign Up</button>
+    <button type="button" id="tSt" onclick="tab('st')">Staff Login</button>
+  </div>
+  <div class="err" id="eAuth"></div>
+  <form id="fIn" onsubmit="send(event,'login','eAuth',r=>setUser(r.user))">
+    <div class="fld"><label>Student Email</label><input type="email" name="email" required placeholder="student@campus.edu" /></div>
+    <div class="fld"><label>Password</label><input type="password" name="password" required placeholder="Enter password" /></div>
+    <button type="submit" style="width:100%">Log In</button>
+  </form>
+  <form id="fUp" style="display:none" onsubmit="send(event,'register','eAuth',r=>setUser(r.user))">
+    <div class="fld"><label>Full Name</label><input name="full_name" required placeholder="Juan Dela Cruz" /></div>
+    <div class="fld"><label>Program</label><select name="program"><option>BSIT</option><option>HTM</option><option>CS</option><option>BSBA</option><option>BSED</option><option>Other</option></select></div>
+    <div class="fld"><label>Email</label><input type="email" name="email" required placeholder="you@email.com" /></div>
+    <div class="fld"><label>Password (min 4 chars)</label><input type="password" name="password" minlength="4" required placeholder="Create password" /></div>
+    <button type="submit" style="width:100%">Create Student Account</button>
+  </form>
+  <form id="fSt" style="display:none" onsubmit="send(event,'login','eAuth',r=>{if(r.user.role!=='staff')throw new Error('Not a staff account.');setUser(r.user);})">
+    <div class="fld"><label>Staff Email</label><input type="email" name="email" value="staff@campus.edu" required /></div>
+    <div class="fld"><label>Staff Password</label><input type="password" name="password" required placeholder="Enter staff password" /></div>
+    <button type="submit" class="amb" style="width:100%">Log In as Staff</button>
+  </form>
+  <button type="button" class="out" style="width:100%;margin-top:.5rem" onclick="closeAll()">Cancel</button>
+</div></div>
+
+<div class="bg" id="mRep" onclick="if(event.target===this)closeAll()"><div class="modal">
+  <h3 style="margin-bottom:.75rem">Report Lost or Found Item</h3><div class="err" id="eRep"></div>
+  <form onsubmit="send(event,'report','eRep',loadItems)">
+    <div class="fld"><label>Type</label><select name="type"><option value="lost">I Lost an Item</option><option value="found">I Found an Item</option></select></div>
+    <div class="fld"><label>Item Name</label><input name="title" required placeholder="e.g., Student ID, Aquaflask" /></div>
+    <div class="fld"><label>Category</label><select name="category"><option>ID / Card</option><option>Electronics</option><option>Wallet / Keys</option><option>Tumbler / Bag</option><option>Other</option></select></div>
+    <div class="fld"><label>Campus Location</label><input name="location" required placeholder="e.g., Computer Lab 2, Canteen" /></div>
+    <div class="fld"><label>Date</label><input type="date" name="item_date" id="rDate" required /></div>
+    <div class="fld"><label>Description</label><textarea name="public_desc" rows="2" required></textarea></div>
+    <div class="fld"><label>Hidden Verification Clue (Staff Only)</label><input name="secret_detail" placeholder="ID number, sticker, etc." /></div>
+    <div class="fld"><label>Photo (Optional)</label><input type="file" accept="image/*" onchange="prepImg(this)" /><input type="hidden" name="photo_data" id="pData" /></div>
+    <button type="submit" style="width:100%">Submit Report</button>
+  </form>
+  <button type="button" class="out" style="width:100%;margin-top:.5rem" onclick="closeAll()">Cancel</button>
+</div></div>
+
+<div class="bg" id="mClm" onclick="if(event.target===this)closeAll()"><div class="modal">
+  <h3 style="margin-bottom:.75rem">Claim: <span id="cTitle"></span></h3><div class="err" id="eClm"></div>
+  <form onsubmit="send(event,'claim','eClm',loadItems)">
+    <input type="hidden" name="item_id" id="cId" />
+    <div class="fld"><label>Proof of Ownership</label><textarea name="proof_text" rows="3" required placeholder="Describe unique marks or ID number..."></textarea></div>
+    <button type="submit" class="amb" style="width:100%">Submit Claim</button>
+  </form>
+  <button type="button" class="out" style="width:100%;margin-top:.5rem" onclick="closeAll()">Cancel</button>
+</div></div>
+
+<script>
+const $ = id => document.getElementById(id), esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let user = JSON.parse(localStorage.getItem('clf_user') || 'null'), items = [], filt = 'active';
+const closeAll = () => document.querySelectorAll('.bg').forEach(m => m.classList.remove('open'));
+const openAuth = (msg='') => { $('eAuth').textContent = msg; $('mAuth').classList.add('open'); };
+const tab = t => { $('eAuth').textContent=''; [['tIn','fIn','in'],['tUp','fUp','up'],['tSt','fSt','st']].forEach(([b,f,k])=>{ $(b).classList.toggle('on',t===k); $(f).style.display=t===k?'block':'none'; }); };
+const setF = (v, b) => { filt = v; document.querySelectorAll('.pill').forEach(p => p.classList.remove('on')); b.classList.add('on'); render(); };
+
+function prepImg(inp) {
+  const f = inp.files?.[0]; if (!f) { $('pData').value = ''; return; }
+  const img = new Image(), r = new FileReader();
+  r.onload = e => { img.src = e.target.result; };
+  img.onload = () => {
+    const scale = Math.min(1, 640 / Math.max(img.width, img.height));
+    const c = document.createElement('canvas'); c.width = img.width * scale; c.height = img.height * scale;
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    $('pData').value = c.toDataURL('image/jpeg', 0.75);
+  };
+  r.readAsDataURL(f);
+}
+
+function setUser(u) {
+  user = u; u ? localStorage.setItem('clf_user', JSON.stringify(u)) : localStorage.removeItem('clf_user');
+  $('nav').innerHTML = u
+    ? `<span class="u-pill">${esc(u.full_name)} (${esc(u.program)})${u.role==='staff'?' <span class="tag st">STAFF</span>':''}</span><button onclick="openRep()">+ Report Item</button><button class="sec" onclick="setUser(null)">Log Out</button>`
+    : `<button onclick="openRep()">+ Report Item</button><button class="sec" onclick="openAuth()">Log In / Sign Up</button>`;
+  $('staffBox').classList.toggle('show', u?.role === 'staff');
+  render(); if (u?.role === 'staff') loadClaims();
+}
+function openRep() { if (!user) return openAuth('Please log in first.'); $('eRep').textContent=''; $('pData').value=''; if (!$('rDate').value) $('rDate').value=new Date().toISOString().split('T')[0]; $('mRep').classList.add('open'); }
+function openClm(id) { if (!user) return openAuth('Please log in as a Student to claim.'); const it=items.find(x=>+x.id===+id); $('cId').value=id; $('cTitle').textContent=it?it.title:''; $('eClm').textContent=''; $('mClm').classList.add('open'); }
+
+async function api(act, fd = null) {
+  if (fd && user?.id && !fd.has('user_id')) fd.append('user_id', user.id);
+  const res = await fetch(`api.php?action=${act}`, fd ? { method:'POST', body:fd } : {});
+  const data = JSON.parse(await res.text());
+  if (!res.ok || data.success === false) throw new Error(data.message || 'Failed');
+  return data;
+}
+async function send(e, act, err, cb) {
+  e.preventDefault(); $(err).textContent='';
+  const btn = e.target.querySelector('button[type="submit"]'); if (btn) btn.disabled = true;
+  try { const r = await api(act, new FormData(e.target)); await cb(r); e.target.reset(); $('pData').value=''; closeAll(); }
+  catch (ex) { $(err).textContent = ex.message; }
+  finally { if (btn) btn.disabled = false; }
+}
+
+function render() {
+  const q = $('q').value.trim().toLowerCase(), isStaff = user?.role === 'staff';
+  const list = items.filter(i => (filt==='active'?i.status!=='CLOSED':filt==='CLOSED'?i.status==='CLOSED':i.type===filt&&i.status!=='CLOSED') && (!q || `${i.title} ${i.category} ${i.location} ${i.public_desc} ${i.reporter_name}`.toLowerCase().includes(q)));
+  $('grid').innerHTML = list.length ? list.map(i => `
+    <article class="card">${i.photo_url?`<img src="${esc(i.photo_url)}" alt="">`:''}<div class="c-body">
+      <div class="row"><div><span class="tag ${esc(i.type)}">${esc(i.type)}</span> <span class="tag">${esc(i.category)}</span></div><span class="tag st">${i.status==='CLOSED'?'CLAIMED / CLOSED':esc(i.status.replace('_',' '))}</span></div>
+      <h3>${esc(i.title)}</h3><p style="font-size:.9rem;color:var(--slate)">${esc(i.public_desc)}</p>
+      <div class="meta">
+        <div><b>Location:</b> ${esc(i.location)} &bull; ${esc(i.item_date)}</div>
+        <div><b>By:</b> ${esc(i.reporter_name)} (${esc(i.reporter_program)})</div>
+        ${isStaff ? `<div style="color:var(--teal);margin-top:.2rem"><b>Clue:</b> ${esc(i.secret_detail || 'None')}</div>` : ''}
+      </div>
+      ${i.status!=='CLOSED' && !isStaff ? `<button class="dark" style="width:100%;margin-top:.4rem" onclick="openClm(${+i.id})">Claim / I Have Info</button>` : ''}
+      ${isStaff ? `<div class="staff-bar">
+        <select onchange="setSt(${+i.id},this.value)">
+          <option value="OPEN" ${i.status==='OPEN'?'selected':''}>Open</option>
+          <option value="UNDER_REVIEW" ${i.status==='UNDER_REVIEW'?'selected':''}>Under Review</option>
+          <option value="CLOSED" ${i.status==='CLOSED'?'selected':''}>Claimed / Closed</option>
+        </select>
+        <button type="button" class="del" onclick="delItem(${+i.id})">Remove</button>
+      </div>` : ''}
+    </div></article>`).join('') : '<p style="color:var(--muted)">No items posted yet.</p>';
+}
+
+async function setSt(id, status) { const fd=new FormData(); fd.append('item_id',id); fd.append('status',status); await api('update_item',fd); await loadItems(); }
+async function delItem(id) { if (!confirm('Remove this item permanently?')) return; const fd=new FormData(); fd.append('item_id',id); await api('delete_item',fd); await Promise.all([loadItems(),loadClaims()]); }
+async function clearLogs() { await api('clear_claims', new FormData()); await loadClaims(); }
+async function loadItems() { try { items = (await api('items')).items || []; render(); } catch (ex) { $('grid').innerHTML = `<p class="err" style="display:block">${esc(ex.message)}</p>`; } }
+async function loadClaims() {
+  try {
+    const list = (await api('claims')).claims || [];
+    $('claimsList').innerHTML = list.length ? list.map(c => `
+      <div class="claim"><div><b>${esc(c.item_title)}</b> &mdash; ${esc(c.claimant_name)} (${esc(c.claimant_program)})<br>
+      <span style="font-size:.82rem;color:var(--muted)">Proof: "${esc(c.proof_text)}" | Clue: "${esc(c.secret_detail||'None')}" | <b>${esc(c.status)}</b></span></div>
+      ${c.status==='PENDING'?`<div style="display:flex;gap:.4rem"><button onclick="verify(${+c.id},'APPROVED')">Approve &amp; Close</button><button class="out" onclick="verify(${+c.id},'REJECTED')">Reject</button></div>`:''}</div>`).join('') : '<p style="font-size:.84rem;color:var(--muted)">No claims in queue.</p>';
+  } catch (_) {}
+}
+async function verify(id, dec) { const fd=new FormData(); fd.append('claim_id',id); fd.append('decision',dec); await api('verify_claim',fd); await Promise.all([loadItems(),loadClaims()]); }
+setUser(user); loadItems();
+</script>
+</body>
+</html>
